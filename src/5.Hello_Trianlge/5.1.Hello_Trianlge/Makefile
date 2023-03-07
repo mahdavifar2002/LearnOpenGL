@@ -2,7 +2,7 @@ LINKFLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl
 CFLAGS    = -g -Wall -ansi
 CC        = g++
 
-C_SRCS    = $(wildcard ../*.c)
+C_SRCS    = $(wildcard ../../*.c)
 CPP_SRCS  = $(wildcard *.cpp)
 OBJS      = $(CPP_SRCS:.cpp=.o) $(C_SRCS:.c=.o)
 PROG      = a.out
