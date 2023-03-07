@@ -164,6 +164,9 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+	// comment the following line if you want the triangles to be filled
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	// render loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -179,8 +182,6 @@ int main()
 		glUseProgram(shaderProgram);
 		// bind the vertex array object
 		glBindVertexArray(VAO);
-		// comment the following line if you want the triangles to be filled
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		// draw the triangles
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
