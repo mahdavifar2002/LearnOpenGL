@@ -103,6 +103,11 @@ int main()
 		// activate the shader program
 		shader.use();
 
+		// update the uniform offset
+		float timeValue = glfwGetTime();
+		float offset = sin(timeValue)/2.0f;
+		shader.setFloat("xOffset", offset);
+
 		// bind the vertex array object
 		glBindVertexArray(VAO);
 		// draw the triangle
