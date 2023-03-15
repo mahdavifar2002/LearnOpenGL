@@ -1,6 +1,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../../includes/stb_image.h"
+
 #include <iostream>
 #include <cmath>
 
@@ -70,7 +73,6 @@ int main()
 		1, 2, 3		// second triangle
 	};
 
-
 	// define vertex array object
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
@@ -106,7 +108,32 @@ int main()
 	glEnableVertexAttribArray(2);
 	
 	// Unbind the VAO so it won't be accidentally modified by other VAO calls
-	glBindVertexArray(0); 
+	glBindVertexArray(0);
+
+	// load and create a texture
+	// -------------------------
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set the texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image, create texture and generate mipmaps
+	int width, heigth, nrChannel;
+	unsigned char* data = stbi_load("../../../resources/textures/container.jpg", &width, &heigth, &nrChannel, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, heigth, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		cout << "ERROR::TEXTURE::FAILED_TO_LOAD_TEXTURE_IMAGE" << endl;
+	}
+	stbi_image_free(data);
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
