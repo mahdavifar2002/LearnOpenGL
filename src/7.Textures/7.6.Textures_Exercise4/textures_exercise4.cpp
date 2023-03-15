@@ -17,11 +17,19 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+float mix_value = 0.2;
+
 // process inputs in each iteration of render loop
-void processInput(GLFWwindow* window)
+void processInput(GLFWwindow* window, Shader shader)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		mix_value = min(mix_value + 0.0002f, 1.0f);
+	
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		mix_value = max(mix_value - 0.0002f, 0.0f);
 }
 
 int main()
@@ -169,7 +177,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// input
-		processInput(window);
+		processInput(window, shader);
 
 		// redering commands
 		
@@ -188,6 +196,10 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
+
+		//set the uniform
+		shader.setFloat("mix_value", mix_value);
+
 		// draw the triangle
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
