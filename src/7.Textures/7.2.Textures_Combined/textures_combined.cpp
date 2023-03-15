@@ -112,9 +112,11 @@ int main()
 
 	// load and create a texture
 	// -------------------------
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	unsigned int texture1, texture2;
+	// texture 1
+	// ---------
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);
 	// set the texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -123,6 +125,7 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// load image, create texture and generate mipmaps
 	int width, heigth, nrChannel;
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = stbi_load("../../../resources/textures/container.jpg", &width, &heigth, &nrChannel, 0);
 	if (data)
 	{
@@ -134,6 +137,33 @@ int main()
 		cout << "ERROR::TEXTURE::FAILED_TO_LOAD_TEXTURE_IMAGE" << endl;
 	}
 	stbi_image_free(data);
+	// texture 2
+	// ---------
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	// set the texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image, create texture and generate mipmaps
+	data = stbi_load("../../../resources/textures/awesomeface.png", &width, &heigth, &nrChannel, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, heigth, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		cout << "ERROR::TEXTURE::FAILED_TO_LOAD_TEXTURE_IMAGE" << endl;
+	}
+	stbi_image_free(data);
+
+	// tell OpenGL for each sampler to which texture unit it belongs
+	shader.use();
+	shader.setInt("texture1", 0);
+	shader.setInt("texture2", 1);
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
@@ -152,8 +182,12 @@ int main()
 
 		// bind the vertex array object
 		glBindVertexArray(VAO);
-		// bind the texture
-		glBindTexture(GL_TEXTURE_2D, texture);
+		
+		// bind the textures
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
 		// draw the triangle
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
