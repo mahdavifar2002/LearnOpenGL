@@ -152,6 +152,8 @@ int main()
 
 		// bind the vertex array object
 		glBindVertexArray(VAO);
+		// bind the texture
+		glBindTexture(GL_TEXTURE_2D, texture);
 		// draw the triangle
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
