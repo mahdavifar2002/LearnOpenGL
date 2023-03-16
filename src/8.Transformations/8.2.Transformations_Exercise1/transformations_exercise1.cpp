@@ -59,7 +59,7 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	// create shader
-	Shader shader("8.1.transform.vs", "8.1.transform.fs");
+	Shader shader("8.2.transform.vs", "8.2.transform.fs");
 	
 	// set up vertex data
 
@@ -194,8 +194,8 @@ int main()
 
 		// set uniform for transform matrix
 		glm::mat4 trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(0.5, -0.5, 0.0f));
 		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		trans = glm::translate(trans, glm::vec3(0.5, -0.5, 0.0f));
 
 		unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
