@@ -28,7 +28,7 @@ void processInput(GLFWwindow* window)
 }
 
 // draw fractal
-void recursive_draw(Shader shader, glm::mat4 trans, float scale, int depth)
+void recursive_draw(Shader shader, glm::mat4 trans, int depth)
 {
 	if (depth == 0)
 	return;
@@ -42,17 +42,19 @@ void recursive_draw(Shader shader, glm::mat4 trans, float scale, int depth)
 	// trans = glm::translate(trans, glm::vec3(0.5, -0.5, 0.0f));
 	// trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
+	float scale = 0.5;
+
 	glm::mat4 trans_top = glm::translate(trans, glm::vec3(0, scale, 0.0f));
 	trans_top = glm::scale(trans_top, glm::vec3(scale));
-	recursive_draw(shader, trans_top, scale, depth - 1);
+	recursive_draw(shader, trans_top, depth - 1);
 
 	glm::mat4 trans_right = glm::translate(trans, glm::vec3(scale, -scale, 0.0f));
 	trans_right = glm::scale(trans_right, glm::vec3(scale));
-	recursive_draw(shader, trans_right, scale, depth - 1);
+	recursive_draw(shader, trans_right, depth - 1);
 
 	glm::mat4 trans_left = glm::translate(trans, glm::vec3(-scale, -scale, 0.0f));
 	trans_left = glm::scale(trans_left, glm::vec3(scale));
-	recursive_draw(shader, trans_left, scale, depth - 1);
+	recursive_draw(shader, trans_left, depth - 1);
 }
 
 
@@ -195,7 +197,7 @@ int main()
 
 		// draw sierpinski triangle fractal
 		glm::mat4 trans = glm::mat4(1.0f);
-		recursive_draw(shader, trans, 0.5, 7);
+		recursive_draw(shader, trans, 7);
 
 		// swap the buffers and poll IO events
 		glfwSwapBuffers(window);
